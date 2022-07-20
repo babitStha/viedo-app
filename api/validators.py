@@ -11,7 +11,7 @@ def validate_file_type(value):
 
 def validate_file_length(value):
     max_duration = 10 # in min
-    clip = VideoFileClip(value.temporary_file_path())
+    clip = VideoFileClip(value.path)
     duration = clip.duration
     if duration >  max_duration * 60: #converting into seconds
         raise ValidationError("Video Length must be less than 10 min")

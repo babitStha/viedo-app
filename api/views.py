@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Video
-from .serializers import VideoSerializer
+from .serializers import VideoSerializer, ChargeSerializer
 from rest_framework import status
 
 # Create your views here.
@@ -33,9 +33,11 @@ def add_video(request):
 def get_charge(request):
     if request.data:
         max_len = 6 * 60 + 18
-        video_size = float(request.data.get('video_size_in_MB'))
-        length_in_sec = float(request.data.get('length_in_sec'))
-        type = request.data.get('type')
+        serilizer = ChargeSerializer(data=request.data)
+        if serilizer.is_valid(raise_exception=True):
+            video_size = serilizer.data.get('video_size_in_MB')
+            length_in_sec = serilizer.data.get('length_in_sec')
+            type = request.data.get('type')
         charges= 0.0
         charges += (5 if (video_size < 500) else 12.5)
         charges += (12.5 if (length_in_sec < max_len) else 20)
